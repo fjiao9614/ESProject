@@ -1,3 +1,4 @@
+import config.LoadCluster;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.RequestLine;
@@ -27,7 +28,7 @@ public class KafkaConsumerES {
  */
         Properties props = new Properties();
         // 服务器ip:端口号，集群用逗号分隔
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "106.14.14.144:9092,47.100.43.254:9092,47.102.157.3:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, LoadCluster.load_value("application.properties","kafka_cluster"));
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "earliest");
@@ -41,9 +42,9 @@ public class KafkaConsumerES {
  *
  */
         RestClient restClient = RestClient.builder(
-                new HttpHost("106.14.14.144", 9200, "http"),
-                new HttpHost("47.100.43.254", 9200, "http"),
-                new HttpHost("47.102.157.3", 9200, "http")).build();
+                new HttpHost(LoadCluster.load_value("application.properties","eshost1"), Integer.parseInt(LoadCluster.load_value("application.properties","esport1")), "http"),
+                new HttpHost(LoadCluster.load_value("application.properties","eshost2"), Integer.parseInt(LoadCluster.load_value("application.properties","esport2")),"http"),
+                new HttpHost(LoadCluster.load_value("application.properties","eshost3"), Integer.parseInt(LoadCluster.load_value("application.properties","esport3")),"http")).build();
         Request request = new Request("POST", INDEX+"/_doc");
 //      endpoint: {index}/_update/{id}
 

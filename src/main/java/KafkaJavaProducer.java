@@ -1,26 +1,27 @@
+import config.LoadCluster;
 import net.sf.json.JSONObject;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.Properties;
 
 public class KafkaJavaProducer {
     private  final static String TOPIC = "index_name";
     private  final static String FILENAME = "baidu.txt";
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
+
         String path = "data/"+FILENAME;
         File file = new File(path);
 //        StringBuilder result = new StringBuilder();
 
         Properties props = new Properties();
         // 服务器ip:端口号，集群用逗号分隔
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "106.14.14.144:9092,47.100.43.254:9092,47.102.157.3:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, LoadCluster.load_value("application.properties","kafka_cluster"));
         props.put("acks", "all");
         // key序列化指定类
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
